@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structure of the Government of Kenya (2010 Constitution)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ke: {
+                            green: '#006600',
+                            red: '#BB0000',
+                            black: '#111111',
+                            gold: '#DAA520',
+                            lightgreen: '#E8F5E9',
+                            lightred: '#FFEBEE',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for Hierarchy Lines and Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        .tree-line-v {
+            width: 2px;
+            background-color: #cbd5e1;
+        }
+        .tree-line-h {
+            height: 2px;
+            background-color: #cbd5e1;
+        }
+        .voted-badge {
+            animation: pulse-border 2s infinite;
+        }
+        @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(0, 102, 0, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(0, 102, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 102, 0, 0); }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-ke-green selection:text-white">
+
+    <!-- Header & Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur shadow-sm border-b border-slate-200">
+        <!-- Top Kenyan Flag Color Stripe -->
+        <div class="h-1.5 w-full flex">
+            <div class="h-full w-1/4 bg-ke-black"></div>
+            <div class="h-full w-1/12 bg-white"></div>
+            <div class="h-full w-1/4 bg-ke-red"></div>
+            <div class="h-full w-1/12 bg-white"></div>
+            <div class="h-full w-1/4 bg-ke-green"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-ke-green text-white flex items-center justify-center font-bold text-xl shadow-md border-2 border-ke-gold">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 leading-tight">State Structure of Kenya</h1>
+                    <p class="text-xs text-slate-500 font-medium">Under the Constitution of Kenya, 2010</p>
+                </div>
+            </div>
+
+            <!-- Official External Reference Links & View Selector -->
+            <div class="flex flex-wrap items-center gap-2">
+                <!-- External Constitutional & Electoral Links -->
+                <div class="flex items-center gap-1.5 border-r border-slate-200 pr-2 mr-1">
+                    <a href="https://kenyalaw.org/akn/ke/act/2010/constitution/eng@2010-09-03" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-50 text-emerald-800 hover:bg-emerald-100 transition flex items-center gap-1.5 border border-emerald-200">
+                        <i class="fa-solid fa-book-atlas text-ke-green"></i>
+                        <span>Kenya Constitution (2010)</span>
+                        <i class="fa-solid fa-up-right-from-square text-[10px] text-emerald-600"></i>
+                    </a>
+                    <a href="https://www.iebc.or.ke/" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-800 hover:bg-slate-200 transition flex items-center gap-1.5 border border-slate-200">
+                        <i class="fa-solid fa-check-to-slot text-ke-red"></i>
+                        <span>IEBC Official Portal</span>
+                        <i class="fa-solid fa-up-right-from-square text-[10px] text-slate-500"></i>
+                    </a>
+                </div>
+
+                <div class="bg-slate-100 p-1 rounded-xl flex border border-slate-200 text-xs font-semibold">
+                    <button id="btn-filter-all" onclick="setFilter('all')" class="px-3 py-1.5 rounded-lg transition-all bg-white text-slate-800 shadow-sm">
+                        All Nodes
+                    </button>
+                    <button id="btn-filter-voted" onclick="setFilter('voted')" class="px-3 py-1.5 rounded-lg transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-ke-green"></span>
+                        Voted Seats Only
+                    </button>
+                    <button id="btn-filter-appointed" onclick="setFilter('appointed')" class="px-3 py-1.5 rounded-lg transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+                        Appointed / Nominated
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
+
+        <!-- Info / Summary Banner -->
+        <section class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-ke-green/5 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i> Constitutional Governance
+                    </div>
+                    <h2 class="text-lg md:text-xl font-bold text-slate-900">Three Arms & Two Levels of Government</h2>
+                    <p class="text-sm text-slate-600 max-w-3xl">
+                        Power is divided horizontally among <strong>Executive, Legislature, and Judiciary</strong> (Checks and Balances), and vertically between <strong>National Government</strong> and <strong>47 Devolved County Governments</strong>. Read the full text of the law at <a href="https://kenyalaw.org/akn/ke/act/2010/constitution/eng@2010-09-03" target="_blank" rel="noopener noreferrer" class="underline text-ke-green hover:text-emerald-800 font-semibold">Kenya Law Constitution Portal</a>.
+                    </p>
+                </div>
+                <div class="flex items-center gap-4 text-xs font-semibold bg-slate-50 p-3 rounded-xl border border-slate-200 w-full md:w-auto justify-around">
+                    <div class="text-center px-2">
+                        <div class="text-lg font-bold text-ke-green">290</div>
+                        <div class="text-slate-500">Constituencies</div>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div class="text-center px-2">
+                        <div class="text-lg font-bold text-ke-red">47</div>
+                        <div class="text-slate-500">Counties</div>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div class="text-center px-2">
+                        <div class="text-lg font-bold text-ke-black">1,450</div>
+                        <div class="text-slate-500">Wards (MCAs)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Hierarchy Tree View Section -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 overflow-x-auto">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-base font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                    <i class="fa-solid fa-sitemap text-ke-green"></i> Top-Down Power Hierarchy
+                </h2>
+                <span class="text-xs text-slate-500">Click any card for seat breakdown & roles</span>
+            </div>
+
+            <!-- Tree Diagram Container -->
+            <div class="min-w-[850px] py-4">
+                <!-- Top Level: The Constitution & People of Kenya -->
+                <div class="flex flex-col items-center">
+                    <a href="https://kenyalaw.org/akn/ke/act/2010/constitution/eng@2010-09-03" target="_blank" rel="noopener noreferrer" class="bg-slate-900 hover:bg-slate-800 transition text-white px-6 py-2.5 rounded-xl shadow font-semibold text-sm flex items-center gap-2 border-2 border-ke-gold">
+                        <i class="fa-solid fa-book-bookmark text-ke-gold"></i> Sovereign Power (Constitution of Kenya 2010) <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-400 ml-1"></i>
+                    </a>
+                    <div class="tree-line-v h-6"></div>
+                </div>
+
+                <!-- National Level Container -->
+                <div class="border-2 border-dashed border-slate-200 rounded-2xl p-4 bg-slate-50/50 relative">
+                    <div class="absolute -top-3 left-6 bg-slate-200 text-slate-700 text-xs px-2.5 py-0.5 rounded-md font-semibold tracking-wide">
+                        NATIONAL GOVERNMENT
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 pt-2">
+
+                        <!-- 1. EXECUTIVE ARM -->
+                        <div class="node-card branch-executive flex flex-col items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-full text-center pb-2 border-b border-slate-100 flex items-center justify-center gap-2 font-bold text-slate-800 text-sm">
+                                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span> Executive Arm
+                            </div>
+                            <!-- President & DP -->
+                            <div class="mt-3 w-full">
+                                <div onclick="openModal('president')" class="seat-item cursor-pointer p-2.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100/80 transition flex items-center justify-between group" data-voted="true">
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-950 flex items-center gap-1.5">
+                                            <i class="fa-solid fa-user-tie text-ke-green"></i> President & Deputy President
+                                        </div>
+                                        <div class="text-[11px] text-emerald-800">Head of State & Government</div>
+                                    </div>
+                                    <span class="px-1.5 py-0.5 bg-ke-green text-white text-[10px] font-bold rounded uppercase">Voted</span>
+                                </div>
+                            </div>
+                            <div class="tree-line-v h-3 my-1"></div>
+                            <!-- Cabinet Secretaries -->
+                            <div class="w-full">
+                                <div onclick="openModal('cabinet')" class="seat-item cursor-pointer p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 transition" data-voted="false">
+                                    <div class="text-xs font-semibold text-slate-800">Cabinet Secretaries (Ministers)</div>
+                                    <div class="text-[10px] text-slate-500">Appointed by President (Approved by NA)</div>
+                                </div>
+                            </div>
+                            <div class="tree-line-v h-3 my-1"></div>
+                            <!-- Civil Service / Security -->
+                            <div class="w-full">
+                                <div class="p-2 rounded-lg border border-slate-200 bg-slate-50 text-center" data-voted="false">
+                                    <div class="text-[11px] font-medium text-slate-700">Principal Secretaries & Administration</div>
+                                    <div class="text-[10px] text-slate-500">Civil Service & State Agencies</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. LEGISLATIVE ARM -->
+                        <div class="node-card branch-legislature flex flex-col items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-full text-center pb-2 border-b border-slate-100 flex items-center justify-center gap-2 font-bold text-slate-800 text-sm">
+                                <span class="w-2.5 h-2.5 rounded-full bg-ke-green"></span> Legislative Arm (Parliament)
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 w-full mt-3">
+                                <!-- National Assembly -->
+                                <div class="p-2 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5">
+                                    <div class="text-xs font-bold text-slate-900 border-b pb-1 text-center">National Assembly</div>
+                                    
+                                    <div onclick="openModal('mp')" class="seat-item cursor-pointer p-1.5 rounded bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition" data-voted="true">
+                                        <div class="text-[11px] font-bold text-emerald-900">290 Constituency MPs</div>
+                                        <div class="text-[9px] text-emerald-700 font-medium">Voted directly (First-Past-The-Post)</div>
+                                    </div>
+                                    
+                                    <div onclick="openModal('womanrep')" class="seat-item cursor-pointer p-1.5 rounded bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition" data-voted="true">
+                                        <div class="text-[11px] font-bold text-emerald-900">47 Woman Reps</div>
+                                        <div class="text-[9px] text-emerald-700 font-medium">Voted directly (1 per County)</div>
+                                    </div>
+
+                                    <div onclick="openModal('nominated_na')" class="seat-item cursor-pointer p-1.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700" data-voted="false">
+                                        12 Nominated MPs (Party lists)
+                                    </div>
+                                </div>
+
+                                <!-- Senate -->
+                                <div class="p-2 rounded-lg border border-slate-200 bg-slate-50 flex flex-col gap-1.5">
+                                    <div class="text-xs font-bold text-slate-900 border-b pb-1 text-center">The Senate</div>
+                                    
+                                    <div onclick="openModal('senator')" class="seat-item cursor-pointer p-1.5 rounded bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition" data-voted="true">
+                                        <div class="text-[11px] font-bold text-emerald-900">47 County Senators</div>
+                                        <div class="text-[9px] text-emerald-700 font-medium">Voted directly (1 per County)</div>
+                                    </div>
+
+                                    <div onclick="openModal('nominated_senate')" class="seat-item cursor-pointer p-1.5 rounded bg-slate-100 border border-slate-200 text-[10px] text-slate-700" data-voted="false">
+                                        20 Nominated Senators (16 Women, 2 Youth, 2 PWD)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. JUDICIAL ARM -->
+                        <div class="node-card branch-judiciary flex flex-col items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                            <div class="w-full text-center pb-2 border-b border-slate-100 flex items-center justify-center gap-2 font-bold text-slate-800 text-sm">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Judicial Arm (Judicature)
+                            </div>
+                            
+                            <div class="w-full mt-3 space-y-2">
+                                <div onclick="openModal('judiciary')" class="seat-item cursor-pointer p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-amber-50/50 transition" data-voted="false">
+                                    <div class="text-xs font-bold text-slate-900">Supreme Court</div>
+                                    <div class="text-[10px] text-slate-500">Chief Justice (President of Supreme Court) + 6 Judges</div>
+                                </div>
+                                <div onclick="openModal('judiciary')" class="seat-item cursor-pointer p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-amber-50/50 transition" data-voted="false">
+                                    <div class="text-xs font-bold text-slate-900">Court of Appeal</div>
+                                    <div class="text-[10px] text-slate-500">Hears appeals from High Courts</div>
+                                </div>
+                                <div onclick="openModal('judiciary')" class="seat-item cursor-pointer p-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-amber-50/50 transition" data-voted="false">
+                                    <div class="text-xs font-bold text-slate-900">High Court & Subordinate Courts</div>
+                                    <div class="text-[10px] text-slate-500">Magistrates, Kadhis Courts, Tribunals</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Connecting line to Devolution -->
+                <div class="flex flex-col items-center my-2">
+                    <div class="tree-line-v h-6"></div>
+                    <div class="bg-ke-red text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                        Devolution Interface (Article 174)
+                    </div>
+                    <div class="tree-line-v h-6"></div>
+                </div>
+
+                <!-- Devolved Level Container (47 Counties) -->
+                <div class="border-2 border-dashed border-ke-red/30 rounded-2xl p-4 bg-red-50/20 relative">
+                    <div class="absolute -top-3 left-6 bg-ke-red text-white text-xs px-2.5 py-0.5 rounded-md font-semibold tracking-wide">
+                        DEVOLVED COUNTY GOVERNMENTS (47 COUNTIES)
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6 pt-2">
+                        <!-- County Executive -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="text-xs font-bold text-slate-800 border-b pb-2 flex items-center justify-between">
+                                <span>County Executive Arm</span>
+                                <span class="text-[10px] text-slate-500">Administers County Services</span>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                <div onclick="openModal('governor')" class="seat-item cursor-pointer p-2.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 transition flex items-center justify-between" data-voted="true">
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-950">County Governor & Deputy</div>
+                                        <div class="text-[10px] text-emerald-800">Head of County Executive</div>
+                                    </div>
+                                    <span class="px-1.5 py-0.5 bg-ke-green text-white text-[9px] font-bold rounded uppercase">Voted</span>
+                                </div>
+                                <div class="p-2 rounded-lg border border-slate-200 bg-slate-50 text-[11px] text-slate-700" data-voted="false">
+                                    County Executive Committee Members (CECMs) & Chief Officers (Appointed)
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- County Legislature -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="text-xs font-bold text-slate-800 border-b pb-2 flex items-center justify-between">
+                                <span>County Assembly Arm</span>
+                                <span class="text-[10px] text-slate-500">County Lawmaking & Oversight</span>
+                            </div>
+                            <div class="mt-3 space-y-2">
+                                <div onclick="openModal('mca')" class="seat-item cursor-pointer p-2.5 rounded-lg border border-emerald-300 bg-emerald-50 hover:bg-emerald-100 transition flex items-center justify-between" data-voted="true">
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-950">Ward MCAs (1,450 Total)</div>
+                                        <div class="text-[10px] text-emerald-800">Elected directly by Ward Voters</div>
+                                    </div>
+                                    <span class="px-1.5 py-0.5 bg-ke-green text-white text-[9px] font-bold rounded uppercase">Voted</span>
+                                </div>
+                                <div class="p-2 rounded-lg border border-slate-200 bg-slate-50 text-[11px] text-slate-700" data-voted="false">
+                                    Nominated MCAs (Gender Top-up & Special Interest Lists)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Detailed Breakdown Grid for the 3 Arms -->
+        <section class="space-y-4">
+            <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-ke-red"></i> Core Functions of the 3 Arms of Government
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Executive Card -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-building-flag"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900 text-base">The Executive</h3>
+                                    <span class="text-[11px] font-medium text-slate-500">Law Implementation</span>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-blue-50 text-blue-700 font-semibold px-2 py-0.5 rounded-full">Art. 129-155</span>
+                        </div>
+
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-blue-500 mt-0.5"></i>
+                                <span><strong>Executes & Implements Laws:</strong> Enforces acts passed by Parliament.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-blue-500 mt-0.5"></i>
+                                <span><strong>National Policy:</strong> Formulates and directs national public policy and development programmes.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-blue-500 mt-0.5"></i>
+                                <span><strong>Defense & Security:</strong> Commander-in-Chief of Defense Forces (KDF) and national security organs.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-blue-500 mt-0.5"></i>
+                                <span><strong>Foreign Affairs:</strong> Represents the republic internationally, negotiates treaties & receives ambassadors.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100">
+                        <button onclick="openModal('president')" class="w-full text-center text-xs font-semibold text-blue-600 hover:text-blue-800 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 transition">
+                            View Executive Elected Seats &rarr;
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Legislature Card -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-50 text-ke-green flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-users-rectangle"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900 text-base">The Legislature</h3>
+                                    <span class="text-[11px] font-medium text-slate-500">Parliament (Bicameral)</span>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-full">Art. 93-128</span>
+                        </div>
+
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-ke-green mt-0.5"></i>
+                                <span><strong>Law Making:</strong> Enacts national legislation binding across the Republic.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-ke-green mt-0.5"></i>
+                                <span><strong>Representation:</strong> Represents the will of citizens and special interest groups.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-ke-green mt-0.5"></i>
+                                <span><strong>Public Finance Oversight:</strong> Approves national budget, taxes, and allocation to counties.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-ke-green mt-0.5"></i>
+                                <span><strong>Executive Vetting:</strong> Approves presidential nominees for Cabinet, Chief Justice, & Ambassadors.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100 flex gap-2">
+                        <button onclick="openModal('mp')" class="w-1/2 text-center text-xs font-semibold text-emerald-700 hover:text-emerald-900 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition">
+                            Assembly Seats
+                        </button>
+                        <button onclick="openModal('senator')" class="w-1/2 text-center text-xs font-semibold text-emerald-700 hover:text-emerald-900 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 transition">
+                            Senate Seats
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Judiciary Card -->
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                                    <i class="fa-solid fa-gavel"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-bold text-slate-900 text-base">The Judiciary</h3>
+                                    <span class="text-[11px] font-medium text-slate-500">Law Interpretation</span>
+                                </div>
+                            </div>
+                            <span class="text-xs bg-amber-50 text-amber-700 font-semibold px-2 py-0.5 rounded-full">Art. 159-173</span>
+                        </div>
+
+                        <ul class="mt-4 space-y-2.5 text-xs text-slate-600">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-amber-500 mt-0.5"></i>
+                                <span><strong>Interpretation:</strong> Interprets the Constitution and resolves legal ambiguities.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-amber-500 mt-0.5"></i>
+                                <span><strong>Dispute Resolution:</strong> Administers justice for civil, criminal, and election petitions.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-amber-500 mt-0.5"></i>
+                                <span><strong>Judicial Review:</strong> Can strike down executive acts or parliamentary laws deemed unconstitutional.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-check text-amber-500 mt-0.5"></i>
+                                <span><strong>Independence:</strong> Subject only to the Constitution and law, independent of political influence.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100">
+                        <button onclick="openModal('judiciary')" class="w-full text-center text-xs font-semibold text-amber-700 hover:text-amber-900 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 transition">
+                            View Court Hierarchy &rarr;
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Citizen Direct Voting Section (Key Ballot Seats) -->
+        <section class="bg-emerald-900 text-white rounded-2xl p-6 shadow-md relative overflow-hidden">
+            <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
+            
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+                <div class="max-w-3xl space-y-2">
+                    <span class="inline-block bg-ke-gold text-slate-900 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                        General Election Ballot
+                    </span>
+                    <h2 class="text-xl md:text-2xl font-bold">The 6 Direct Ballot Seats Voted by Citizens</h2>
+                    <p class="text-xs md:text-sm text-emerald-100">
+                        During a Kenyan General Election conducted by the <a href="https://www.iebc.or.ke/" target="_blank" rel="noopener noreferrer" class="text-ke-gold underline hover:text-white font-semibold">Independent Electoral and Boundaries Commission (IEBC Article 88)</a>, registered voters cast <strong>six ballot papers</strong> to directly elect leadership at national and county levels:
+                    </p>
+                </div>
+                <a href="https://www.iebc.or.ke/" target="_blank" rel="noopener noreferrer" class="bg-white text-emerald-950 font-bold px-4 py-2 rounded-xl text-xs hover:bg-emerald-50 transition flex items-center gap-2 shadow shrink-0">
+                    <i class="fa-solid fa-check-to-slot text-ke-red"></i>
+                    Visit Official IEBC Portal
+                    <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                </a>
+            </div>
+
+            <!-- 6 Ballot Seats Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 relative z-10">
+
+                <!-- Ballot 1: President -->
+                <div onclick="openModal('president')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 1 - Executive</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-user-check text-ke-gold"></i> President of Kenya
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected nationally as a ticket with the Deputy President.</p>
+                </div>
+
+                <!-- Ballot 2: Governor -->
+                <div onclick="openModal('governor')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 2 - County Executive</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-landmark text-ke-gold"></i> County Governor
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected county-wide (1 per County) to run local government.</p>
+                </div>
+
+                <!-- Ballot 3: Senator -->
+                <div onclick="openModal('senator')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 3 - Senate</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns text-ke-gold"></i> County Senator
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected county-wide to represent and protect county interests in Parliament.</p>
+                </div>
+
+                <!-- Ballot 4: Woman Rep -->
+                <div onclick="openModal('womanrep')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 4 - National Assembly</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-person-dress text-ke-gold"></i> County Woman Representative
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected county-wide (1 per County) to promote gender equity & affirmative action.</p>
+                </div>
+
+                <!-- Ballot 5: MP -->
+                <div onclick="openModal('mp')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 5 - National Assembly</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-person-shelter text-ke-gold"></i> Constituency MP
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected by constituency voters (290 total) for legislation & local CDF development.</p>
+                </div>
+
+                <!-- Ballot 6: MCA -->
+                <div onclick="openModal('mca')" class="bg-emerald-800/80 border border-emerald-700/80 hover:border-ke-gold p-4 rounded-xl cursor-pointer transition group">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[10px] font-bold text-ke-gold uppercase tracking-wider">Ballot 6 - County Assembly</span>
+                        <i class="fa-solid fa-arrow-up-right-from-square text-xs text-emerald-400 group-hover:text-ke-gold"></i>
+                    </div>
+                    <div class="font-bold text-sm text-white flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-ke-gold"></i> Ward MCA
+                    </div>
+                    <p class="text-[11px] text-emerald-200 mt-1">Elected per electoral ward (1,450 total) for grassroots legislation & county oversight.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 mt-12 py-6 text-slate-500 text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+                <span class="font-bold text-slate-800">Constitution of Kenya 2010</span>
+                <span>•</span>
+                <a href="https://kenyalaw.org/akn/ke/act/2010/constitution/eng@2010-09-03" target="_blank" rel="noopener noreferrer" class="text-ke-green hover:underline flex items-center gap-1 font-medium">
+                    <i class="fa-solid fa-book-atlas"></i> Kenya Law Constitution Document
+                </a>
+                <span>•</span>
+                <a href="https://www.iebc.or.ke/" target="_blank" rel="noopener noreferrer" class="text-ke-green hover:underline flex items-center gap-1 font-medium">
+                    <i class="fa-solid fa-check-to-slot"></i> IEBC Electoral Body
+                </a>
+            </div>
+            <p>Designed for clarity on Executive, Legislative, Judiciary & Citizen Voting Roles.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Seat Detail Modal Container -->
+    <div id="seat-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 transform transition-all">
+            <!-- Modal Header -->
+            <div class="p-5 border-b border-slate-100 flex items-start justify-between bg-slate-50 rounded-t-2xl">
+                <div class="flex items-center gap-3">
+                    <div id="modal-icon" class="w-10 h-10 rounded-xl bg-ke-green text-white flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <h3 id="modal-title" class="font-bold text-slate-900 text-lg leading-snug">Seat Title</h3>
+                        <p id="modal-subtitle" class="text-xs text-slate-500">Seat Subtitle & Election Scope</p>
+                    </div>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-200/50 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-5 text-sm text-slate-700">
+                <!-- Meta Info Badges -->
+                <div class="flex flex-wrap gap-2 text-xs">
+                    <span id="badge-election" class="px-2.5 py-1 rounded-md font-semibold bg-emerald-100 text-emerald-800">
+                        Directly Voted
+                    </span>
+                    <span id="badge-term" class="px-2.5 py-1 rounded-md font-medium bg-slate-100 text-slate-700">
+                        Term: 5 Years
+                    </span>
+                    <span id="badge-scope" class="px-2.5 py-1 rounded-md font-medium bg-blue-50 text-blue-700">
+                        Scope: National
+                    </span>
+                </div>
+
+                <!-- Key Role Summary Box -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h4 class="font-bold text-slate-900 text-xs uppercase tracking-wider mb-1 text-ke-green">Core Purpose</h4>
+                    <p id="modal-purpose" class="text-xs text-slate-600 leading-relaxed">
+                        Detailed purpose description goes here...
+                    </p>
+                </div>
+
+                <!-- Detailed Responsibilities -->
+                <div>
+                    <h4 class="font-bold text-slate-900 text-sm mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-ke-red"></i> Primary Responsibilities & Constitutional Mandate
+                    </h4>
+                    <ul id="modal-responsibilities" class="space-y-2 text-xs text-slate-600 list-disc pl-5">
+                        <!-- Loaded dynamically -->
+                    </ul>
+                </div>
+
+                <!-- Qualifications / Election Rules -->
+                <div class="border-t pt-4">
+                    <h4 class="font-bold text-slate-900 text-sm mb-2">Composition & Qualification Notes</h4>
+                    <p id="modal-notes" class="text-xs text-slate-600 leading-relaxed">
+                        Additional details regarding qualifications or election math.
+                    </p>
+                </div>
+
+                <!-- Reference Links inside Modal -->
+                <div class="border-t pt-4 flex flex-wrap items-center gap-3 text-xs font-semibold">
+                    <span class="text-slate-500">Official Links:</span>
+                    <a href="https://kenyalaw.org/akn/ke/act/2010/constitution/eng@2010-09-03" target="_blank" rel="noopener noreferrer" class="text-emerald-700 hover:text-emerald-900 flex items-center gap-1 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
+                        <i class="fa-solid fa-book-bookmark text-ke-green"></i> Read Full Constitution Text <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                    <a href="https://www.iebc.or.ke/" target="_blank" rel="noopener noreferrer" class="text-slate-700 hover:text-slate-900 flex items-center gap-1 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">
+                        <i class="fa-solid fa-check-to-slot text-ke-red"></i> IEBC Guidelines <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end rounded-b-2xl">
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-800 text-white font-medium text-xs rounded-xl hover:bg-slate-900 transition">
+                    Close Details
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Data and Interactivity Logic -->
+    <script>
+        // Data for all key government seats & bodies
+        const seatData = {
+            president: {
+                title: "President of the Republic of Kenya",
+                subtitle: "Head of State & Head of Government (Article 131)",
+                icon: "fa-user-tie",
+                voted: true,
+                term: "5 Years (Max 2 Terms)",
+                scope: "Nationwide Direct Vote",
+                purpose: "The President is the Head of State and Government, Commander-in-Chief of the Kenya Defence Forces, and the symbol of national unity.",
+                responsibilities: [
+                    "Directs and coordinates the functions of ministries and government departments.",
+                    "Appoints Cabinet Secretaries, Principal Secretaries, High Commissioners, and Judges (subject to Parliamentary vetting).",
+                    "Assents to bills passed by Parliament to become law, or refers them back for reconsideration.",
+                    "Chairs the Cabinet and exercises executive authority on behalf of citizens.",
+                    "Declares state of emergency or war with approval of Parliament."
+                ],
+                notes: "Elected via national election. Must secure 50% + 1 of total votes cast nationally, plus at least 25% of votes cast in more than half of the 47 counties."
+            },
+            cabinet: {
+                title: "Cabinet Secretaries (CSs)",
+                subtitle: "Executive Cabinet Ministers (Article 152)",
+                icon: "fa-briefcase",
+                voted: false,
+                term: "Appointed by Sitting President",
+                scope: "National Ministries",
+                purpose: "Head national ministries (e.g., Treasury, Education, Health) to implement government policies and manage civil affairs.",
+                responsibilities: [
+                    "Formulate policy for assigned government ministries.",
+                    "Accountable individually and collectively to the President and Parliament.",
+                    "Attend parliamentary committees when summoned to explain government affairs.",
+                    "Cannot be sitting Members of Parliament (Separation of powers)."
+                ],
+                notes: "Appointed by the President and approved by the National Assembly. Constitution limits number between 14 to 22 Cabinet Secretaries."
+            },
+            mp: {
+                title: "Member of National Assembly (Constituency MP)",
+                subtitle: "National Assembly Representative (Article 95)",
+                icon: "fa-person-shelter",
+                voted: true,
+                term: "5 Years",
+                scope: "Single Constituency (290 Total)",
+                purpose: "Represents single-member geographical constituencies in the National Assembly, enacting national legislation and managing localized funds.",
+                responsibilities: [
+                    "Enacts national laws that apply across the country.",
+                    "Deliberates on and allocates national revenue, including the National Government Constituencies Development Fund (NG-CDF).",
+                    "Exercises oversight over national executive organs and public expenditure.",
+                    "Approves declarations of war and states of emergency.",
+                    "Vets presidential appointees to executive and constitutional offices."
+                ],
+                notes: "Directly elected using First-Past-The-Post in 290 constituencies."
+            },
+            womanrep: {
+                title: "County Woman Representative",
+                subtitle: "Affirmative Action MP in National Assembly (Article 97)",
+                icon: "fa-person-dress",
+                voted: true,
+                term: "5 Years",
+                scope: "Entire County (47 Seats Total)",
+                purpose: "Represents women and special interests of an entire county within the National Assembly to enhance gender equity.",
+                responsibilities: [
+                    "Enacts national laws alongside constituency MPs.",
+                    "Manages the National Government Affirmative Action Fund (NGAAF) for women, youth, and PWD empowerment.",
+                    "Promotes legislation addressing gender equality, human rights, and social protection.",
+                    "Participates in parliamentary budget allocation and executive oversight."
+                ],
+                notes: "Directly elected by all registered voters in a county (1 per county for all 47 counties)."
+            },
+            senator: {
+                title: "County Senator",
+                subtitle: "Member of the Senate (Article 96)",
+                icon: "fa-building-columns",
+                voted: true,
+                term: "5 Years",
+                scope: "Entire County (47 Elected Seats)",
+                purpose: "Protects and advances the interests of County Governments and their administration within Parliament.",
+                responsibilities: [
+                    "Considers, debates, and passes bills affecting devolved county governments.",
+                    "Determines the allocation of national revenue among the 47 counties (Division of Revenue Bill).",
+                    "Exercises oversight over revenue allocated to county governments.",
+                    "Hears and determines impeachment proceedings against County Governors or the President."
+                ],
+                notes: "Directly elected by voters in each of the 47 counties (1 elected Senator per county)."
+            },
+            nominated_na: {
+                title: "Nominated Members of National Assembly",
+                subtitle: "12 Special Interest Representatives (Article 97)",
+                icon: "fa-users",
+                voted: false,
+                term: "5 Years",
+                scope: "National Political Party Lists",
+                purpose: "Ensures representation of special interests including youth, persons with disabilities (PWDs), and workers.",
+                responsibilities: [
+                    "Participate in all parliamentary debates and committee work.",
+                    "Advocate specifically for policies benefiting marginalized groups and workers.",
+                    "Vote on national legislation."
+                ],
+                notes: "Nominated by parliamentary political parties in proportion to the number of seats won in the general election."
+            },
+            nominated_senate: {
+                title: "Nominated Senators",
+                subtitle: "20 Special Affirmative Action Senators (Article 98)",
+                icon: "fa-user-group",
+                voted: false,
+                term: "5 Years",
+                scope: "National Political Party Lists",
+                purpose: "Guarantees gender equity and representation for special interest groups in the Senate.",
+                responsibilities: [
+                    "16 Women nominated by political parties based on seat proportion.",
+                    "2 Youth representatives (1 man, 1 woman).",
+                    "2 Persons with Disabilities (1 man, 1 woman).",
+                    "Participate in Senate legislation, oversight, and committee responsibilities."
+                ],
+                notes: "Nominated from political party lists submitted prior to the general election."
+            },
+            governor: {
+                title: "County Governor",
+                subtitle: "Head of County Executive (Article 179)",
+                icon: "fa-landmark",
+                voted: true,
+                term: "5 Years (Max 2 Terms)",
+                scope: "County Wide",
+                purpose: "Chief Executive of the County Government, responsible for devolved functions such as local health facilities, agriculture, county roads, and trade.",
+                responsibilities: [
+                    "Appoints and heads the County Executive Committee (CECMs).",
+                    "Implements national and county legislation within the county.",
+                    "Manages county public service and local infrastructure development.",
+                    "Presents county annual budget and development plans to County Assembly."
+                ],
+                notes: "Elected on a joint ticket with a Deputy Governor by voters in the respective county."
+            },
+            mca: {
+                title: "Member of County Assembly (MCA)",
+                subtitle: "Ward Representative (Article 177)",
+                icon: "fa-map-location-dot",
+                voted: true,
+                term: "5 Years",
+                scope: "Electoral Ward (1,450 Wards in Kenya)",
+                purpose: "Represents the smallest electoral unit (Ward) in the local County Assembly for lawmaking and local development oversight.",
+                responsibilities: [
+                    "Enacts county laws applicable within county boundaries.",
+                    "Approves county budget and local tax rates.",
+                    "Exercises oversight over the County Governor and Executive Committee.",
+                    "Vets nominated County Executive Committee Members (CECMs)."
+                ],
+                notes: "Directly elected by voters of an Electoral Ward (First-Past-The-Post)."
+            },
+            judiciary: {
+                title: "Judicial Officers & Courts",
+                subtitle: "Judiciary of Kenya (Article 159)",
+                icon: "fa-gavel",
+                voted: false,
+                term: "Security of Tenure (Retirement age 70)",
+                scope: "Republic-wide Jurisdiction",
+                purpose: "Interprets laws, protects fundamental freedoms, and dispenses justice independently without political influence.",
+                responsibilities: [
+                    "<strong>Supreme Court:</strong> Headed by Chief Justice. Final arbiter of Constitutional issues & Presidential Election Disputes.",
+                    "<strong>Court of Appeal:</strong> Hears appeals from the High Court and specialised courts.",
+                    "<strong>High Court:</strong> Unlimited original jurisdiction in civil and criminal matters and constitutional interpretation.",
+                    "<strong>Subordinate Courts:</strong> Magistrates' Courts, Kadhis' Courts, Courts Martial, and Local Tribunals."
+                ],
+                notes: "Judges and Magistrates are appointed by the Judicial Service Commission (JSC) to safeguard strict independence."
+            }
+        };
+
+        // Modal Functionality
+        function openModal(key) {
+            const data = seatData[key];
+            if (!data) return;
+
+            document.getElementById('modal-title').textContent = data.title;
+            document.getElementById('modal-subtitle').textContent = data.subtitle;
+            document.getElementById('modal-purpose').innerHTML = data.purpose;
+            document.getElementById('modal-notes').textContent = data.notes;
+
+            // Badges
+            const eleBadge = document.getElementById('badge-election');
+            if (data.voted) {
+                eleBadge.textContent = "Directly Voted by Citizens";
+                eleBadge.className = "px-2.5 py-1 rounded-md font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300";
+            } else {
+                eleBadge.textContent = "Appointed / Nominated";
+                eleBadge.className = "px-2.5 py-1 rounded-md font-semibold bg-slate-100 text-slate-700 border border-slate-300";
+            }
+
+            document.getElementById('badge-term').textContent = "Term: " + data.term;
+            document.getElementById('badge-scope').textContent = "Scope: " + data.scope;
+
+            // Update Icon
+            const iconContainer = document.getElementById('modal-icon');
+            iconContainer.innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+            if(data.voted) {
+                iconContainer.className = "w-10 h-10 rounded-xl bg-ke-green text-white flex items-center justify-center text-lg font-bold";
+            } else {
+                iconContainer.className = "w-10 h-10 rounded-xl bg-slate-800 text-white flex items-center justify-center text-lg font-bold";
+            }
+
+            // Responsibilities List
+            const respList = document.getElementById('modal-responsibilities');
+            respList.innerHTML = '';
+            data.responsibilities.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = item;
+                respList.appendChild(li);
+            });
+
+            // Show Modal
+            document.getElementById('seat-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('seat-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close Modal on Background Click
+        document.getElementById('seat-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close Modal on Escape Key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Filter Functionality for Tree Diagram
+        function setFilter(type) {
+            const allNodes = document.querySelectorAll('[data-voted]');
+            const btnAll = document.getElementById('btn-filter-all');
+            const btnVoted = document.getElementById('btn-filter-voted');
+            const btnAppointed = document.getElementById('btn-filter-appointed');
+
+            // Reset buttons style
+            [btnAll, btnVoted, btnAppointed].forEach(btn => {
+                btn.className = "px-3 py-1.5 rounded-lg transition-all text-slate-600 hover:text-slate-900";
+            });
+
+            if (type === 'all') {
+                btnAll.className = "px-3 py-1.5 rounded-lg transition-all bg-white text-slate-800 shadow-sm font-bold";
+                allNodes.forEach(node => {
+                    node.style.opacity = "1";
+                    node.style.transform = "scale(1)";
+                });
+            } else if (type === 'voted') {
+                btnVoted.className = "px-3 py-1.5 rounded-lg transition-all bg-emerald-600 text-white shadow-sm font-bold";
+                allNodes.forEach(node => {
+                    if (node.getAttribute('data-voted') === 'true') {
+                        node.style.opacity = "1";
+                        node.style.transform = "scale(1.02)";
+                    } else {
+                        node.style.opacity = "0.25";
+                        node.style.transform = "scale(0.98)";
+                    }
+                });
+            } else if (type === 'appointed') {
+                btnAppointed.className = "px-3 py-1.5 rounded-lg transition-all bg-blue-600 text-white shadow-sm font-bold";
+                allNodes.forEach(node => {
+                    if (node.getAttribute('data-voted') === 'false') {
+                        node.style.opacity = "1";
+                        node.style.transform = "scale(1.02)";
+                    } else {
+                        node.style.opacity = "0.25";
+                        node.style.transform = "scale(0.98)";
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
